@@ -47,6 +47,7 @@ class V2ex(object):
     def login(self):
         self.__prepare_login_data()
         r = self.session.post(LOGIN_URL, self.auth_dict)
+        return self
 
 
     def redeem(self):
@@ -57,5 +58,4 @@ class V2ex(object):
 
 if __name__ == '__main__':
     v2ex = V2ex()
-    v2ex.login()
-    v2ex.redeem()
+    v2ex.login().redeem()
