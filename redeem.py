@@ -52,6 +52,7 @@ class V2ex(object):
     def redeem(self):
         self.__prepare_redeem_param()
         r = self.session.get(REDEEM_URL + self.redeem_code)
+        print('redeem works.')
 
 
 if __name__ == '__main__':
