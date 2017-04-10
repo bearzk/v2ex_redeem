@@ -15,6 +15,7 @@ PASS_PATTERN = r'type="password" ' + base_pattern
 ONCE_PATTERN = r'type="hidden" value="(\w+)" name="once"'
 REDEEM_PATTERN = r'onclick="location.href = .\/mission\/daily\/redeem\?once=(\w+).;"'
 
+NOTIFIER_WEBHOOK_URL = r''
 
 # user
 LOGIN_NAME=''
