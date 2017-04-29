@@ -20,6 +20,7 @@ class V2ex(object):
         self.auth_dict = {}
         self.redeem_code = ''
 
+        self.notifier = NullNotifier()
         if NOTIFIER_WEBHOOK_URL != '':
             self.notifier = Notifier()
 
@@ -43,8 +44,9 @@ class V2ex(object):
         try:
             self.redeem_code = re.search(REDEEM_PATTERN, r.text).groups()[0]
         except:
-            if self.notifier:
-                self.notifier.notify('already redeemed for today.')
+            message = 'already redeemed for today.'
+            print(message)
+            self.notifier.notify(message)
             exit(1)
 
 
@@ -57,11 +59,24 @@ class V2ex(object):
     def redeem(self):
         self.__prepare_redeem_param()
         r = self.session.get(REDEEM_URL + self.redeem_code)
-        if self.notifier:
-            self.notifier.notify('redeem works.')
+        message = 'redeem works.'
+        print(message)
+        self.notifier.notify(message)
 
 
-class Notifier(object):
+class NotifierInterface(object):
+
+    def notify(self, message):
+        raise NotImplementedError
+
+
+class NullNotifier(NotifierInterface):
+
+    def notify(self, message):
+        pass
+
+
+class Notifier(NotifierInterface):
 
     def notify(self, message):
         requests.post(NOTIFIER_WEBHOOK_URL, json={"text":message, "username": "v2ex_redeem"})
