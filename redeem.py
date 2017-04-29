@@ -46,12 +46,7 @@ class V2ex(object):
         except:
             message = 'already redeemed for today.'
             print(message)
-<<<<<<< HEAD
             self.notifier.notify(message)
-=======
-            if self.notifier:
-                self.notifier.notify(message)
->>>>>>> 086bf0131c559c79ff71fe75e6b854f8dc1d594d
             exit(1)
 
 
@@ -74,12 +69,7 @@ class V2ex(object):
         r = self.session.get(REDEEM_URL + self.redeem_code)
         message = 'redeem works.'
         print(message)
-<<<<<<< HEAD
         self.notifier.notify(message)
-=======
-        if self.notifier:
-            self.notifier.notify(message)
->>>>>>> 086bf0131c559c79ff71fe75e6b854f8dc1d594d
 
 
 class NotifierInterface(object):
