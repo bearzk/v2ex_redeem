@@ -46,13 +46,26 @@ class V2ex(object):
         except:
             message = 'already redeemed for today.'
             print(message)
+<<<<<<< HEAD
             self.notifier.notify(message)
+=======
+            if self.notifier:
+                self.notifier.notify(message)
+>>>>>>> 086bf0131c559c79ff71fe75e6b854f8dc1d594d
             exit(1)
 
 
     def login(self):
-        self.__prepare_login_data()
-        r = self.session.post(LOGIN_URL, self.auth_dict)
+        try:
+            self.__prepare_login_data()
+            r = self.session.post(LOGIN_URL, self.auth_dict)
+            print('logged in.')
+        except:
+            message = 'login failed.'
+            print(message)
+            if self.notifier:
+                self.notifier.notify(message)
+            exit(1)
         return self
 
 
@@ -61,7 +74,12 @@ class V2ex(object):
         r = self.session.get(REDEEM_URL + self.redeem_code)
         message = 'redeem works.'
         print(message)
+<<<<<<< HEAD
         self.notifier.notify(message)
+=======
+        if self.notifier:
+            self.notifier.notify(message)
+>>>>>>> 086bf0131c559c79ff71fe75e6b854f8dc1d594d
 
 
 class NotifierInterface(object):
