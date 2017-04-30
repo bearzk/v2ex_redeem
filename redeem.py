@@ -6,6 +6,9 @@ from sys import exit
 import requests
 
 from config import *
+from exceptions import *
+from notifiers.plugins import NullNotifier, SlackNotifier
+
 if LOGIN_NAME == '' or LOGIN_PASS == '':
     print('Please set LOGIN_NAME and LOGIN_PASS in config.py.')
     exit(1)
@@ -22,8 +25,7 @@ class V2ex(object):
 
         self.notifier = NullNotifier()
         if NOTIFIER_WEBHOOK_URL != '':
-            self.notifier = Notifier()
-
+            self.notifier = SlackNotifier()
 
     def __prepare_login_data(self):
         r = self.session.get(LOGIN_URL)
@@ -38,7 +40,6 @@ class V2ex(object):
             'once': once_value
         }
 
-
     def __prepare_redeem_param(self):
         r = self.session.get(DAILY_URL)
         try:
@@ -49,20 +50,17 @@ class V2ex(object):
             self.notifier.notify(message)
             exit(1)
 
-
     def login(self):
         try:
             self.__prepare_login_data()
             r = self.session.post(LOGIN_URL, self.auth_dict)
             print('logged in.')
-        except:
+        except NotLoggedInException:
             message = 'login failed.'
             print(message)
-            if self.notifier:
-                self.notifier.notify(message)
+            self.notifier.notify(message)
             exit(1)
         return self
-
 
     def redeem(self):
         self.__prepare_redeem_param()
@@ -70,24 +68,6 @@ class V2ex(object):
         message = 'redeem works.'
         print(message)
         self.notifier.notify(message)
-
-
-class NotifierInterface(object):
-
-    def notify(self, message):
-        raise NotImplementedError
-
-
-class NullNotifier(NotifierInterface):
-
-    def notify(self, message):
-        pass
-
-
-class Notifier(NotifierInterface):
-
-    def notify(self, message):
-        requests.post(NOTIFIER_WEBHOOK_URL, json={"text":message, "username": "v2ex_redeem"})
 
 
 if __name__ == '__main__':
